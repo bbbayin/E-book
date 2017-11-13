@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+    <dbname value="book" ></dbname>
+
+    <version value="1" ></version>
+
+    <list>
+        <mapping class="com.bayin.myapplication.good.db.BookCatalogue"></mapping>
+        <mapping class="com.bayin.myapplication.good.db.BookList"></mapping>
+        <mapping class="com.bayin.myapplication.good.db.BookMarks"></mapping>
+    </list>
+</litepal>

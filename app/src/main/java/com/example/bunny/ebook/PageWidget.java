@@ -142,7 +142,6 @@ public class PageWidget extends View {
     }
 
     public boolean doTouchEvent(MotionEvent event) {
-        // TODO Auto-generated method stub
         if (event.getAction() == MotionEvent.ACTION_MOVE) {
             mTouch.x = event.getX();
             mTouch.y = event.getY();
@@ -151,8 +150,10 @@ public class PageWidget extends View {
              * invalidate()的调用是把之前的旧的view从主UI线程队列中pop掉
              * 而postInvalidate()在工作者线程中被调用
             */
-            this.postInvalidate();
+//            this.postInvalidate();
+            invalidate();
         }
+
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             mTouch.x = event.getX();
             mTouch.y = event.getY();
@@ -161,15 +162,17 @@ public class PageWidget extends View {
         }
         if (event.getAction() == MotionEvent.ACTION_UP) {
             //是否触发翻页
-            if (canDragOver() && !isPlaying) {
+            if (canDragOver()) {
                 startAnimation(800);
             } else {
                 mTouch.x = mCornerX - 0.09f;//如果不能翻页就让mTouch返回没有静止时的状态
                 mTouch.y = mCornerY - 0.09f;//- 0.09f是防止mTouch = 800 或mTouch= 0 ,在这些值时会出现BUG
             }
 
-            this.postInvalidate();
+//            this.postInvalidate();
+            invalidate();
         }
+
         // return super.onTouchEvent(event);
         return true;
     }

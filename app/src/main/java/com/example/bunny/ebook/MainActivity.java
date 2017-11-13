@@ -63,7 +63,7 @@ public class MainActivity extends Activity {
         //设置字体
         Typeface typeface = Typeface.createFromAsset(getAssets(), "cj.ttf");
         pagefactory.setTypeFace(typeface);
-        pagefactory.setTextSize(40,mCurPageCanvas);
+        pagefactory.setTextSize(40, mCurPageCanvas);
 
         pagefactory.setBgBitmap(BitmapFactory.decodeResource(
                 this.getResources(), R.mipmap.book_bg_green));//设置背景图片
@@ -77,22 +77,31 @@ public class MainActivity extends Activity {
                     Toast.LENGTH_SHORT).show();
         }
 
-        this.mPageWidget.setBitmaps(mCurPageBitmap, mCurPageBitmap);
+        mPageWidget.setBitmaps(mCurPageBitmap, mNextPageBitmap);
 
-        this.mPageWidget.setOnTouchListener(new View.OnTouchListener() {
+        mPageWidget.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent e) {
                 boolean ret = false;
-                if (v == MainActivity.this.mPageWidget) {
+                if (v == mPageWidget) {
+
+
                     if (e.getAction() == MotionEvent.ACTION_DOWN) {
+
+                        //如果正在执行翻页动画，则中断点击事件
                         if (mPageWidget.isPlaying()) return false;
+
                         //停止动画。与forceFinished(boolean)相反，Scroller滚动到最终x与y位置时中止动画。
-                        MainActivity.this.mPageWidget.abortAnimation();
+                        mPageWidget.abortAnimation();
+
                         //计算拖拽点对应的拖拽角
-                        MainActivity.this.mPageWidget.calcCornerXY(e.getX(), e.getY());
+                        mPageWidget.calcCornerXY(e.getX(), e.getY());
+
                         //将文字绘于当前页
                         pagefactory.onDraw(mCurPageCanvas);
-                        if (MainActivity.this.mPageWidget.DragToRight()) {
+
+
+                        if (mPageWidget.DragToRight()) {
                             //是否从左边翻向右边
                             try {
                                 //true，显示上一页
@@ -101,6 +110,7 @@ public class MainActivity extends Activity {
                                 e1.printStackTrace();
                             }
                             if (pagefactory.isfirstPage()) return false;
+                            //绘制下面一页内容
                             pagefactory.onDraw(mNextPageCanvas);
                         } else {
                             try {
@@ -111,12 +121,14 @@ public class MainActivity extends Activity {
                                 e1.printStackTrace();
                             }
                             if (pagefactory.islastPage()) return false;
+                            //绘制下面一页内容
                             pagefactory.onDraw(mNextPageCanvas);
                         }
-                        MainActivity.this.mPageWidget.setBitmaps(mCurPageBitmap, mNextPageBitmap);
+
+                        mPageWidget.setBitmaps(mCurPageBitmap, mNextPageBitmap);
                     }
 
-                    ret = MainActivity.this.mPageWidget.doTouchEvent(e);
+                    ret = mPageWidget.doTouchEvent(e);
                     return ret;
                 }
                 return false;
